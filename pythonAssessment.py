@@ -2,86 +2,107 @@ import re
 from collections import Counter
 
 
-# =========================
-# 1. COUNT SPECIFIC WORD
-# =========================
-def count_specific_word(text: str, word: str) -> int:
-    if not text or not word:
+# 1. Count Specific Word
+def count_specific_word(text, word):
+    if text == "" or word == "":
         return 0
 
-    words = re.findall(r"\b\w+\b", text.lower())
-    return words.count(word.lower())
+    words = re.findall(r'\b\w+\b', text.lower())
+
+    count = 0
+    for w in words:       
+        if w == word.lower():  
+            count += 1
+
+    return count
 
 
-# =========================
-# 2. MOST COMMON WORD
-# =========================
-def identify_most_common_word(text: str):
-    if not text.strip():
+# 2. Most Common Word
+def identify_most_common_word(text):
+    if text.strip() == "":
         return None
 
-    words = re.findall(r"\b\w+\b", text.lower())
-
-    if not words:
-        return None
+    words = re.findall(r'\b\w+\b', text.lower())
 
     counter = Counter(words)
     return counter.most_common(1)[0][0]
 
 
-# =========================
-# 3. AVERAGE WORD LENGTH
-# =========================
-def calculate_average_word_length(text: str) -> float:
-    if not text.strip():
+# 3. Average Word Length
+def calculate_average_word_length(text):
+    if text.strip() == "":
         return 0
 
-    words = re.findall(r"\b\w+\b", text)
+    words = re.findall(r'\b\w+\b', text)
 
-    if len(words) == 0:
-        return 0
+    total = 0
 
-    total_length = sum(len(word) for word in words)
-    return total_length / len(words)
+    for word in words:     
+        total += len(word)
+
+    return total / len(words)
 
 
-# =========================
-# 4. COUNT PARAGRAPHS
-# =========================
-def count_paragraphs(text: str) -> int:
-    if not text.strip():
+# 4. Count Paragraphs
+def count_paragraphs(text):
+    if text.strip() == "":
         return 1
 
-    paragraphs = [p for p in text.split("\n") if p.strip() != ""]
-    return len(paragraphs) if paragraphs else 1
+    paragraphs = [p for p in text.split("\n") if p.strip()]
+
+    return len(paragraphs)
 
 
-# =========================
-# 5. COUNT SENTENCES
-# =========================
-def count_sentences(text: str) -> int:
-    if not text.strip():
+# 5. Count Sentences
+def count_sentences(text):
+    if text.strip() == "":
         return 1
 
-    sentences = re.split(r"[.!?]+", text)
+    sentences = re.split(r'[.!?]+', text)
+    valid_sentences = []
 
-    sentences = [s for s in sentences if s.strip() != ""]
-    return len(sentences) if sentences else 1
+    for sentence in sentences:    
+        if sentence.strip():      
+            valid_sentences.append(sentence)
+
+    return len(valid_sentences)
 
 
-# =========================
-# OPTIONAL TEST RUN
-# =========================
-if __name__ == "__main__":
-    sample_text = """
-    Python is powerful. Python is easy to learn!
-    Is Python popular? Yes it is.
+# MAIN PROGRAM
+def main():
 
-    It is used in AI and data science.
-    """
+    while True:       
+        print("\nTEXT ANALYSIS MENU")
+        print("1. Analyze Text")
+        print("2. Exit")
 
-    print("Specific word count:", count_specific_word(sample_text, "python"))
-    print("Most common word:", identify_most_common_word(sample_text))
-    print("Average word length:", calculate_average_word_length(sample_text))
-    print("Paragraphs:", count_paragraphs(sample_text))
-    print("Sentences:", count_sentences(sample_text))
+        choice = input("Enter choice: ")
+
+        if choice == "1":     
+            text = input("Enter article text: ")
+            word = input("Enter word to search: ")
+
+            print("Specific word count:",
+                  count_specific_word(text, word))
+
+            print("Most common word:",
+                  identify_most_common_word(text))
+
+            print("Average word length:",
+                  calculate_average_word_length(text))
+
+            print("Paragraph count:",
+                  count_paragraphs(text))
+
+            print("Sentence count:",
+                  count_sentences(text))
+
+        elif choice == "2":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid choice")
+
+
+main()
